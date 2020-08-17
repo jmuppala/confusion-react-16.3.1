@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -13,6 +13,19 @@ import { useParams } from 'react-router-dom';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Link from '@material-ui/core/Link';
 import { Link as RouterLink } from 'react-router-dom';
+import { useForm, Controller } from "react-hook-form";
+import Button from '@material-ui/core/Button';
+import CreateIcon from '@material-ui/icons/Create';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
   },
   media: {
     height: 480,
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
   },
   title: {
     margin: theme.spacing(4, 0, 2),
@@ -67,7 +84,96 @@ function DishComments({ comments, classes }) {
                 </ListItem>                  
               ))}
             </List>
+            <CommentForm classes={classes} />
         </Grid>
+    );
+}
+
+function CommentForm({ classes }) {
+
+    const { register, handleSubmit, reset, errors, clearErrors, control } = useForm({ mode: 'onChange' });
+    const [commentOpen, setCommentOpen] = useState(false);
+
+    const handleCommentSubmit = (data) => {
+      alert(JSON.stringify(data));
+      reset();
+      clearErrors();
+      setCommentOpen(false);
+    };
+
+    return(
+        <div>
+            <Button startIcon={<CreateIcon />} variant="outlined" color="inherit" onClick={() => setCommentOpen(true)}>Submit Comment</Button>
+            <Dialog open={commentOpen} onClose={() => setCommentOpen(false)} aria-labelledby="form-dialog-title">
+            <form onSubmit={handleSubmit(handleCommentSubmit)} >
+            <DialogTitle id="form-dialog-title">Submit Comment</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Please enter your rating, name and comment below.
+              </DialogContentText>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="rating-label">Rating</InputLabel>
+                <Controller
+                    as={
+                        <Select labelId="rating-label">
+                            <MenuItem value={1}>1</MenuItem>
+                            <MenuItem value={2}>2</MenuItem>
+                            <MenuItem value={3}>3</MenuItem>
+                            <MenuItem value={4}>4</MenuItem>
+                            <MenuItem value={5}>5</MenuItem>
+                        </Select>
+                    }
+                    name="rating"
+                    control={control}
+                    defaultValue={1}
+                />
+              </FormControl>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="author"
+                label="Name"
+                name="author"
+                defaultValue=""
+                type="text"
+                fullWidth
+                inputRef={register({
+                  required: 'Name is required',
+                  minLength: {
+                    value: 3,
+                    message: 'Must be greater than 2 characters',
+                  },
+                  maxLength: {
+                    value: 15,
+                    message: 'Must be 15 characters or less',
+                  },
+                })}
+                error={errors.author?.message.length > 0}
+                helperText={errors.author?.message}
+              />
+              <TextField
+                margin="dense"
+                id="comment"
+                label="comment"
+                type="text"
+                name="comment"
+                defaultValue=""
+                fullWidth
+                inputRef={register}
+                multiline rows={6}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => { clearErrors(); setCommentOpen(false)}} color="primary">
+                Cancel
+              </Button>
+              <Button type="submit" color="primary" disabled={errors.author?.message.length > 0}>
+                Submit
+              </Button>
+            </DialogActions>
+            </form>
+          </Dialog>
+        </div>
     );
 }
 
