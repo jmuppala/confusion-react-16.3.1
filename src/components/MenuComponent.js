@@ -5,6 +5,11 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
+import { Link as RouterLink } from 'react-router-dom';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Link from '@material-ui/core/Link';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,23 +28,40 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function MenuList({ dishes, setSelectedDishId }) {
+export default function MenuList({ dishes }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
+        <Grid container spacing={2}>
+            <Grid item xs={12}>
+                <Breadcrumbs aria-label="breadcrumb">
+                    <Link color="inherit" component={RouterLink} to="/">
+                    Home
+                    </Link>
+                    <Typography color="textPrimary">Menu</Typography>
+                </Breadcrumbs>
+            </Grid>
+            <Grid item xs={12}>
+                <Typography variant="h4" align='left' component="h4">
+                Restaurant Menu
+                </Typography>
+            </Grid>
+        </Grid>
         <GridList cellHeight={240} cols={3} className={classes.gridList}>
             { dishes.map((dish) => (
-                <GridListTile key={dish.id} onClick={() => setSelectedDishId(dish.id)}>
+                <GridListTile key={dish.id}>
                     <img src={dish.image} alt={dish.name} />
-                    <GridListTileBar
-                    title={dish.name}
-                    actionIcon={
-                        <IconButton aria-label={`info about ${dish.name}`} className={classes.icon}>
-                        <InfoIcon />
-                        </IconButton>
-                    }
-                    />
+                    <RouterLink to={`/menu/${dish.id}`}>
+                        <GridListTileBar
+                        title={dish.name}
+                        actionIcon={
+                            <IconButton aria-label={`info about ${dish.name}`} className={classes.icon}>
+                            <InfoIcon />
+                            </IconButton>
+                        }
+                        />
+                    </RouterLink>
                 </GridListTile>
             ))}
         </GridList>

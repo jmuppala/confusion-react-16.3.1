@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import NavBar from './components/NavBar';
 import Home from './components/HomeComponent';
 import MenuList from './components/MenuComponent';
@@ -15,8 +15,6 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 function App() {
 
-  const [selectedDishId, setSelectedDishId] = useState(null);
-
   const dishes = DISHES;
   const comments = COMMENTS;
   const promotions = PROMOTIONS;
@@ -32,7 +30,10 @@ function App() {
             <Home dishes={dishes} promotions={promotions} leaders={leaders} />
           </Route>
           <Route exact path='/menu'>
-            <MenuList dishes={dishes} setSelectedDishId={setSelectedDishId} />
+            <MenuList dishes={dishes} />
+          </Route>
+          <Route path='/menu/:dishId'>
+            <DishDetail dishes={dishes} comments={comments} />
           </Route>
           <Route exact path='/contactus'>
             <Contact />

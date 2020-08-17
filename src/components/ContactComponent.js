@@ -7,10 +7,21 @@ import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Typography from '@material-ui/core/Typography';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Link from '@material-ui/core/Link';
+import { Link as RouterLink } from 'react-router-dom';
 
 export default function Contact(props) {
     return(
         <Grid container spacing={2}>
+            <Grid item xs={12}>
+                <Breadcrumbs aria-label="breadcrumb">
+                    <Link color="inherit" component={RouterLink} to="/">
+                    Home
+                    </Link>
+                    <Typography color="textPrimary">Contact Us</Typography>
+                </Breadcrumbs>
+            </Grid>
             <Grid item xs={12}>
                 <Typography variant="h4" align='left' component="h4">
                 Location Information
