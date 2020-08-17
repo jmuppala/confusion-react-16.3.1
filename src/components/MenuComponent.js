@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
-import { DISHES } from '../shared/dishes';
-import DishDetail from './DishDetailComponent';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,18 +23,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function MenuList() {
+export default function MenuList({ dishes, setSelectedDishId }) {
   const classes = useStyles();
-
-  const [selectedDish, setSelectedDish] = useState(null);
-
-  const dishes = DISHES;
 
   return (
     <div className={classes.root}>
         <GridList cellHeight={240} cols={3} className={classes.gridList}>
             { dishes.map((dish) => (
-                <GridListTile key={dish.id} onClick={() => setSelectedDish(dish)}>
+                <GridListTile key={dish.id} onClick={() => setSelectedDishId(dish.id)}>
                     <img src={dish.image} alt={dish.name} />
                     <GridListTileBar
                     title={dish.name}
@@ -49,7 +43,6 @@ export default function MenuList() {
                 </GridListTile>
             ))}
         </GridList>
-        {selectedDish ? <DishDetail dish={selectedDish} /> : null }
     </div>
   );
 }

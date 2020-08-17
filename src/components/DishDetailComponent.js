@@ -67,8 +67,10 @@ function DishComments({ comments, classes }) {
     );
 }
 
-export default function DishDetail ({ dish }) {
+export default function DishDetail ({ dishes, selectedDishId }) {
     const classes = useStyles();
+
+    const dish = dishes.filter((dish) => dish.id === selectedDishId)[0];
 
     return(
         <Grid container spacing={2} className={classes.root}>
