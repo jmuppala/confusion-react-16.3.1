@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -28,6 +28,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Divider from '@material-ui/core/Divider';
+import { useForm } from "react-hook-form";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,21 +52,19 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function NavBar(props) {
+function NavBar() {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const [loginOpen, setLoginOpen] = useState(false);
 
-  const username = useRef();
-  const password = useRef();
+  const { register, handleSubmit, reset, errors, clearErrors } = useForm({ mode: 'onChange' });
 
-  const handleLoginSubmit = () => {
-    console.log('Username: ', username.current.value, 'Password: ', password.current.value);
-    alert('Username: ' + username.current.value + ' Password: ' + password.current.value);
+  const handleLoginSubmit = (data) => {
+    alert(JSON.stringify(data));
+    reset();
+    clearErrors();
     setLoginOpen(false);
-    username.current.value = '';
-    password.current.value = '';
   };
 
   const handleDrawerToggle = () => {
@@ -126,6 +125,7 @@ function NavBar(props) {
             </Drawer>
           </Hidden>
           <Dialog open={loginOpen} onClose={() => setLoginOpen(false)} aria-labelledby="form-dialog-title">
+            <form onSubmit={handleSubmit(handleLoginSubmit)} >
             <DialogTitle id="form-dialog-title">Login</DialogTitle>
             <DialogContent>
               <DialogContentText>
@@ -136,27 +136,50 @@ function NavBar(props) {
                 margin="dense"
                 id="username"
                 label="Username"
+                name="username"
+                defaultValue=""
                 type="text"
                 fullWidth
-                inputRef={username}
+                inputRef={register({
+                  required: 'Username is required',
+                  minLength: {
+                    value: 3,
+                    message: 'Username must be at least 3 characters',
+                  },
+                })}
+                error={errors.username?.message.length > 0}
+                helperText={errors.username?.message}
               />
               <TextField
                 margin="dense"
                 id="password"
                 label="Password"
                 type="password"
+                name="password"
+                defaultValue=""
                 fullWidth
-                inputRef={password}
+                inputRef={register({
+                  required: 'Password is required',
+                  minLength: {
+                    value: 8,
+                    message: 'Password must be at least 8 characters',
+                  },
+                })}
+                error={errors.password?.message.length > 0}
+                helperText={errors.password?.message}
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setLoginOpen(false)} color="primary">
+              <Button onClick={() => { clearErrors(); setLoginOpen(false)}} color="primary">
                 Cancel
               </Button>
-              <Button onClick={handleLoginSubmit} color="primary">
+              <Button
+                disabled={errors.username?.message.length > 0 || errors.password?.message.length > 0}
+                type="submit" color="primary">
                 Login
               </Button>
             </DialogActions>
+            </form>
           </Dialog>
         </Toolbar>
       </AppBar>
