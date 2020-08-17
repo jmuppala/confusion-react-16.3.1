@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import PhoneIcon from '@material-ui/icons/Phone';
 import PrintIcon from '@material-ui/icons/Print';
@@ -10,8 +10,69 @@ import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Link from '@material-ui/core/Link';
 import { Link as RouterLink } from 'react-router-dom';
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      '& .MuiTextField-root': {
+        margin: '10px 0',
+        width: '100%'
+      }
+    },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+    },
+    selectEmpty: {
+        marginTop: theme.spacing(2),
+    },
+}));
 
 export default function Contact(props) {
+    const classes = useStyles();
+
+    const [formState, setFormState] = useState({
+        firstname: '',
+        lastname: '',
+        telnum: 0,
+        email: '',
+        agree: false,
+        contactType: 'Tel.',
+        message: ''
+    });
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        console.log('Form Value is: ', JSON.stringify(formState));
+        alert('Form Value is: ' + JSON.stringify(formState));
+        setFormState({
+            firstname: '',
+            lastname: '',
+            telnum: 0,
+            email: '',
+            agree: false,
+            contactType: 'Tel.',
+            message: ''
+        });
+    }
+
+    const handleInputChange = (event) => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        setFormState({ ...formState, [name]: value });
+    };
+
     return(
         <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -27,7 +88,7 @@ export default function Contact(props) {
                 Location Information
                 </Typography>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6}>
                 <Typography variant="h6" align='left' component="h6">
                 Our Address
                 </Typography>
@@ -39,7 +100,7 @@ export default function Contact(props) {
                 <a href="mailto:confusion@food.net">confusion@food.net</a>
                 </address>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6}>
                 <Typography variant="h6" align='left' component="h6">
                 Map of our Location
                 </Typography>
@@ -50,6 +111,43 @@ export default function Contact(props) {
                     <Button startIcon={<WhatsAppIcon />} href="tel:+85212345678">WhatsApp</Button>
                     <Button startIcon={<EmailIcon />} href="mailto:confusion@food.net">Email</Button>
                 </ButtonGroup>
+            </Grid>
+            <Grid item xs={12}>
+                <form className={classes.root} noValidate autoComplete="off" onSubmit={handleSubmit}>
+                    <TextField label="First Name" variant="outlined" name="firstname" value={formState.firstname} onChange={handleInputChange} />
+                    <TextField label="Last Name" variant="outlined" name="lastname" value={formState.lastname} onChange={handleInputChange} />
+                    <TextField type="telnum" label="Tel. Number" variant="outlined" name="telnum" value={formState.telnum} onChange={handleInputChange} />
+                    <TextField type="email" label="Email" variant="outlined" name="email" value={formState.email} onChange={handleInputChange} />
+                    <FormGroup row>
+                        <FormControlLabel
+                            control={
+                            <Switch checked={formState.agree} onChange={handleInputChange}
+                                name="agree" color="primary"
+                            />
+                            }
+                            label="May We Contact You?"
+                        />
+                        <FormControl variant="outlined" className={classes.formControl}>
+                            <InputLabel id="demo-simple-select-outlined-label">Contact Type</InputLabel>
+                            <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                            name="contactType"
+                            value={formState.contactType}
+                            onChange={handleInputChange}
+                            label="Contact Type"
+                            >
+                                <MenuItem value='None'><em>None</em></MenuItem>
+                                <MenuItem value={'Tel.'}>Tel.</MenuItem>
+                                <MenuItem value={'Email'}>Email</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <TextField multiline rows={12} label="Your Feedback" variant="outlined" name="message" value={formState.message} onChange={handleInputChange} />
+                    </FormGroup>
+                    <Button type="submit" variant="contained" color="primary">
+                    Submit
+                    </Button>
+                </form>
             </Grid>
         </Grid>
     );
