@@ -68,7 +68,7 @@ function DishCard ({ dish, classes }) {
     );
 }
 
-function DishComments({ comments, classes }) {
+function DishComments({ dishId, comments, addComment, classes }) {
     return(
         <Grid item xs={12} md={6}>
             <Typography variant="h6" className={classes.title}>
@@ -84,18 +84,19 @@ function DishComments({ comments, classes }) {
                 </ListItem>                  
               ))}
             </List>
-            <CommentForm classes={classes} />
+            <CommentForm dishId={dishId} addComment={addComment} classes={classes} />
         </Grid>
     );
 }
 
-function CommentForm({ classes }) {
+function CommentForm({ dishId, addComment, classes }) {
 
     const { register, handleSubmit, reset, errors, clearErrors, control } = useForm({ mode: 'onChange' });
     const [commentOpen, setCommentOpen] = useState(false);
 
     const handleCommentSubmit = (data) => {
-      alert(JSON.stringify(data));
+      alert(JSON.stringify({...data, dishId: dishId, date: new Date().toISOString()}));
+      addComment({...data, dishId: dishId, date: new Date().toISOString()});
       reset();
       clearErrors();
       setCommentOpen(false);
@@ -177,7 +178,7 @@ function CommentForm({ classes }) {
     );
 }
 
-export default function DishDetail ({ dishes, comments }) {
+export default function DishDetail ({ dishes, comments, addComment }) {
     const classes = useStyles();
 
     const { dishId } = useParams();
@@ -203,7 +204,7 @@ export default function DishDetail ({ dishes, comments }) {
                 </Typography>
             </Grid>
             <DishCard dish={dish} classes={classes} />
-            <DishComments comments={commentList} classes={classes} />
+            <DishComments dishId={dish.id} comments={commentList} addComment={addComment} classes={classes} />
         </Grid>
     );
 }

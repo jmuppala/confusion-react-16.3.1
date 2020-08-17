@@ -14,7 +14,7 @@ import { useDishes, useComments, usePromotions, useLeaders } from './State/confu
 function App() {
 
   const [dishes] = useDishes();
-  const [comments] = useComments();
+  const [comments, addComment] = useComments();
   const [promotions] = usePromotions();
   const [leaders] = useLeaders();
 
@@ -34,7 +34,7 @@ function App() {
             <MenuList dishes={dishes} />
           </Route>
           <Route path='/menu/:dishId'>
-            <DishDetail dishes={dishes} comments={comments} />
+            <DishDetail dishes={dishes} comments={comments} addComment={addComment} />
           </Route>
           <Route exact path='/contactus'>
             <Contact />
