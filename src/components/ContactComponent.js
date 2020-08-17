@@ -48,6 +48,13 @@ export default function Contact(props) {
         contactType: 'Tel.',
         message: ''
     });
+    
+    const [errors,setErrors] = useState({
+        firstname: '',
+        lastname: '',
+        telnum: '',
+        email: ''
+    });
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -63,6 +70,12 @@ export default function Contact(props) {
             contactType: 'Tel.',
             message: ''
         });
+        setErrors({
+            firstname: '',
+            lastname: '',
+            telnum: '',
+            email: ''
+        });
     }
 
     const handleInputChange = (event) => {
@@ -70,8 +83,53 @@ export default function Contact(props) {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
+        validate(name, value);
+        console.log('errors: ', JSON.stringify(errors));
         setFormState({ ...formState, [name]: value });
     };
+
+    function validate (name, value) {
+
+        // console.log('validate: ', name, value);
+
+        switch (name) {
+            case 'firstname':
+                if (value.length < 3)
+                    setErrors({...errors, [name]:'First Name should be >= 3 characters'});
+                else if (value.length > 10)
+                    setErrors({...errors, [name]:'First Name should be <= 10 characters'});
+                else
+                    setErrors({...errors, [name]:''});
+                return;
+
+            case 'lastname':
+                if (value.length < 3)
+                    setErrors({...errors, [name]:'Last Name should be >= 3 characters'});
+                else if (value.length > 10)
+                    setErrors({...errors, [name]:'Last Name should be <= 10 characters'});
+                else
+                    setErrors({...errors, [name]:''});
+                return;
+
+            case 'telnum':
+                const reg = /^\d+$/;
+                if (!reg.test(value))
+                    setErrors({...errors, [name]:'Tel. Number should contain only numbers'});
+                else
+                    setErrors({...errors, [name]:''});
+                return;
+
+            case 'email':
+                if(value.split('').filter(x => x === '@').length !== 1)
+                    setErrors({...errors, [name]:'Email should contain a @'});
+                else
+                    setErrors({...errors, [name]:''});
+                return;
+
+            default:
+                return;
+        }
+    }
 
     return(
         <Grid container spacing={2}>
@@ -114,10 +172,14 @@ export default function Contact(props) {
             </Grid>
             <Grid item xs={12}>
                 <form className={classes.root} noValidate autoComplete="off" onSubmit={handleSubmit}>
-                    <TextField label="First Name" variant="outlined" name="firstname" value={formState.firstname} onChange={handleInputChange} />
-                    <TextField label="Last Name" variant="outlined" name="lastname" value={formState.lastname} onChange={handleInputChange} />
-                    <TextField type="telnum" label="Tel. Number" variant="outlined" name="telnum" value={formState.telnum} onChange={handleInputChange} />
-                    <TextField type="email" label="Email" variant="outlined" name="email" value={formState.email} onChange={handleInputChange} />
+                <TextField label="First Name" variant="outlined" name="firstname" value={formState.firstname} onChange={handleInputChange}
+                        error={errors.firstname.length > 0} helperText={errors.firstname} /> 
+                    <TextField label="Last Name" variant="outlined" name="lastname" value={formState.lastname} onChange={handleInputChange}
+                        error={errors.lastname.length > 0} helperText={errors.lastname} />
+                    <TextField type="telnum" label="Tel. Number" variant="outlined" name="telnum" value={formState.telnum} onChange={handleInputChange}
+                        error={errors.telnum.length > 0} helperText={errors.telnum} />
+                    <TextField type="email" label="Email" variant="outlined" name="email" value={formState.email} onChange={handleInputChange}
+                        error={errors.email.length > 0} helperText={errors.email} />
                     <FormGroup row>
                         <FormControlLabel
                             control={
@@ -144,7 +206,10 @@ export default function Contact(props) {
                         </FormControl>
                         <TextField multiline rows={12} label="Your Feedback" variant="outlined" name="message" value={formState.message} onChange={handleInputChange} />
                     </FormGroup>
-                    <Button type="submit" variant="contained" color="primary">
+                    <Button type="submit"
+                     disabled={errors.firstname.length > 0 || errors.lastname.length > 0
+                     || errors.telnum.length > 0  || errors.email.length > 0}
+                     variant="contained" color="primary">
                     Submit
                     </Button>
                 </form>
