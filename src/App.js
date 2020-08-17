@@ -1,6 +1,7 @@
 import React from 'react';
 import NavBar from './components/NavBar';
 import Home from './components/HomeComponent';
+import About from './components/AboutComponent';
 import MenuList from './components/MenuComponent';
 import DishDetail from './components/DishDetailComponent';
 import Contact from './components/ContactComponent';
@@ -28,6 +29,9 @@ function App() {
         <Switch>
           <Route exact path='/home'>
             <Home dishes={dishes} promotions={promotions} leaders={leaders} />
+          </Route>
+          <Route exact path='/aboutus'>
+            <About leaders={leaders} />
           </Route>
           <Route exact path='/menu'>
             <MenuList dishes={dishes} />
