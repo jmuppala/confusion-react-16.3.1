@@ -14,6 +14,7 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import YouTubeIcon from '@material-ui/icons/YouTube';
+import { NavLink as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     margin: theme.spacing(2)
   },
+  active: {
+    backgroundColor: theme.palette.primary.main
+  }
 }));
 
 function Footer() {
@@ -37,16 +41,16 @@ function Footer() {
         <Grid container spacing={2}>
           <Grid item xs={12} sm={2} md={1}>
             <List>
-                <ListItem button component="a" href="#" >
+                <ListItem button component={RouterLink} to="/home" activeClassName={classes.active}>
                     <ListItemText primary="Home" />
                 </ListItem>
-                <ListItem button component="a" href="#" >
+                <ListItem button component={RouterLink} to="/aboutus" activeClassName={classes.active}>
                     <ListItemText primary="About" />
                 </ListItem>     
-                <ListItem button component="a" href="#" >
+                <ListItem button component={RouterLink} to="/menu" activeClassName={classes.active}>
                     <ListItemText primary="Menu" />
                 </ListItem>     
-                <ListItem button component="a" href="#" >
+                <ListItem button component={RouterLink} to="/contactus" activeClassName={classes.active}>
                     <ListItemText primary="Contact Us" />
                 </ListItem>                  
             </List>
