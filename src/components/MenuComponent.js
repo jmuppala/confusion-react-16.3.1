@@ -1,83 +1,84 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
+import IconButton from '@material-ui/core/IconButton';
+import InfoIcon from '@material-ui/icons/Info';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
+import { DISHES } from '../shared/dishes';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-  }
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    overflow: 'hidden',
+  },
+  gridList: {
+    width: 1080,
+    height: 500,
+  },
+  icon: {
+    color: 'rgba(255, 255, 255, 0.54)',
+  },
+  media: {
+    height: 480,
+  },
 }));
 
-function MenuItem({ dish }) {
+function DishCard ({ dish, classes }) {
     return(
-        <ListItem alignItems="flex-start">
-            <ListItemAvatar>
-                <Avatar alt={dish.name} src={dish.image} />
-            </ListItemAvatar>
-            <ListItemText
-            primary={dish.name}
-            secondary={dish.description}
-            />
-        </ListItem>
+      <Card className={classes.root} variant="outlined">
+        <CardActionArea>
+          <CardMedia
+            className={classes.media}
+            image={dish.image}
+            title={dish.name}
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="h2">
+              {dish.name}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              {dish.description}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
     );
 }
 
 export default function MenuList() {
   const classes = useStyles();
 
-  const dishes = [
-    {
-      id: 0,
-      name:'Uthappizza',
-      image: 'assets/images/uthappizza.png',
-      category: 'mains',
-      label:'Hot',
-      price:'4.99',
-      description:'A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.'                        },
-   {
-      id: 1,
-      name:'Zucchipakoda',
-      image: 'assets/images/zucchipakoda.png',
-      category: 'appetizer',
-      label:'',
-      price:'1.99',
-      description:'Deep fried Zucchini coated with mildly spiced Chickpea flour batter accompanied with a sweet-tangy tamarind sauce'                        },
-   {
-      id: 2,
-      name:'Vadonut',
-      image: 'assets/images/vadonut.png',
-      category: 'appetizer',
-      label:'New',
-      price:'1.99',
-      description:'A quintessential ConFusion experience, is it a vada or is it a donut?'                        },
-   {
-      id: 3,
-      name:'ElaiCheese Cake',
-      image: 'assets/images/elaicheesecake.png',
-      category: 'dessert',
-      label:'',
-      price:'2.99',
-      description:'A delectable, semi-sweet New York Style Cheese Cake, with Graham cracker crust and spiced with Indian cardamoms'                        }
-   ];
+  const [selectedDish, setSelectedDish] = useState(null);
+
+  const dishes = DISHES;
 
   return (
-    <List className={classes.root}>
-        { dishes.map((dish, index) => {
-            return (
-                <React.Fragment key={dish.id}>
-                    <MenuItem dish={dish} />
-                    { (index < dishes.length - 1) ?
-                        <Divider component="li" />
-                        : null
+    <div className={classes.root}>
+        <GridList cellHeight={240} cols={3} className={classes.gridList}>
+            { dishes.map((dish) => (
+                <GridListTile key={dish.id} onClick={() => setSelectedDish(dish)}>
+                    <img src={dish.image} alt={dish.name} />
+                    <GridListTileBar
+                    title={dish.name}
+                    actionIcon={
+                        <IconButton aria-label={`info about ${dish.name}`} className={classes.icon}>
+                        <InfoIcon />
+                        </IconButton>
                     }
-                </React.Fragment>
-            );
-        })}
-    </List>
+                    />
+                </GridListTile>
+            ))}
+        </GridList>
+        {selectedDish ? <DishCard dish={selectedDish} classes={classes} /> : null }
+    </div>
   );
 }
