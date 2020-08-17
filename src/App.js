@@ -8,18 +8,12 @@ import Contact from './components/ContactComponent';
 import Footer from './components/FooterComponent';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
-import { DISHES } from './shared/dishes';
-import { COMMENTS } from './shared/comments';
-import { PROMOTIONS } from './shared/promotions';
-import { LEADERS } from './shared/leaders';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import { useConfusion } from './State/confusion';
 
 function App() {
 
-  const dishes = DISHES;
-  const comments = COMMENTS;
-  const promotions = PROMOTIONS;
-  const leaders = LEADERS;
+  const [{ dishes, comments, promotions, leaders }] = useConfusion();
 
   return (
     <>
