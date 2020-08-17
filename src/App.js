@@ -9,11 +9,14 @@ import Footer from './components/FooterComponent';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { useConfusion } from './State/confusion';
+import { useDishes, useComments, usePromotions, useLeaders } from './State/confusion';
 
 function App() {
 
-  const [{ dishes, comments, promotions, leaders }] = useConfusion();
+  const [dishes] = useDishes();
+  const [comments] = useComments();
+  const [promotions] = usePromotions();
+  const [leaders] = useLeaders();
 
   return (
     <>

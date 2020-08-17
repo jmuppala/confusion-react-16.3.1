@@ -11,15 +11,14 @@ function reducer (state, action) {
     }
 }
 
-export function useConfusion() {
-    const initialState = {
-        dishes: DISHES,
-        comments: COMMENTS,
-        promotions: PROMOTIONS,
-        leaders: LEADERS
-    };
+function useConfusion(initialState) {
 
     const [state,dispatch] = useReducer(reducer, initialState);
 
     return [state, dispatch];
 }
+
+export const useDishes = () => useConfusion(DISHES);
+export const useComments = () => useConfusion(COMMENTS);
+export const usePromotions = () => useConfusion(PROMOTIONS);
+export const useLeaders = () => useConfusion(LEADERS);
