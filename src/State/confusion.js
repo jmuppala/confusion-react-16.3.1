@@ -5,8 +5,6 @@ import fetch from 'cross-fetch';
 
 function reducer (state, action) {
     switch(action.type) {
-        case ActionTypes.ADD:
-            return {...state, items:state.items.concat({...action.payload, id: state.items.length}) } ;
 
         case ActionTypes.LOADING:
             return {...state, isLoading: true, errMess: null, items: []};
@@ -39,11 +37,6 @@ function useConfusion(itemType) {
         oldStateRef.current = state;
         dispatch(action);
     };
-
-    const add = (item) => myDispatch({
-        type: ActionTypes.ADD,
-        payload: item
-    });
     
     const loading = () => myDispatch({
         type: ActionTypes.LOADING
@@ -71,12 +64,12 @@ function useConfusion(itemType) {
         }
     }, [state]);
 
-    return [state, loading, failed, set, add];
+    return [state, loading, failed, set];
 }
 
 function useThunk(itemType) {
 
-    const [state, loading, failed, set, add] = useConfusion(itemType);
+    const [state, loading, failed, set] = useConfusion(itemType);
 
     const url = baseUrl + itemType;
 
@@ -103,11 +96,41 @@ function useThunk(itemType) {
         
     }
 
+    const addItem = (item) => {
+    
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(item),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (response.ok) {
+                return response;
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText + ' ' + response.url);
+                error.response = response;
+                throw error;
+            }
+        },
+        error => {
+            throw error;
+        })
+        .then(response => response.json())
+        .then(response => console.log('Posted: ', response))
+        .then(() => fetchData())
+        .catch(error => { console.log('Post comments ', error.message);
+            alert('Your comment could not be posted\nError: '+ error.message); })
+    }
+
     useEffect(() => {
         fetchData();
     },[])
 
-    return [state, add];
+    return [state, addItem];
 }
 
 export const useDishes = () => useThunk('dishes');
