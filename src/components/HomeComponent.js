@@ -8,6 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Loading from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import Grow from '@material-ui/core/Grow';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -47,29 +48,31 @@ const useStyles = makeStyles((theme) => ({
         let item = items.items.filter((item) => item.featured)[0];
         return(
             <Grid item xs={12} md={4}>
-                <Card variant="outlined">
-                <CardActionArea>
-                    <CardMedia
-                    className={classes.media}
-                    image={baseUrl + item.image}
-                    title={item.name}
-                    />
-                    <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        {item.name}
-                    </Typography>
-                    {item.designation ? 
-                        (<Typography gutterBottom variant="h6" component="h6">
-                            {item.designation}
-                        </Typography>
-                        ) 
-                        : null }
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        {item.description}
-                    </Typography>
-                    </CardContent>
-                </CardActionArea>
-                </Card>
+                <Grow in={items.items.length > 0} timeout={5000}>
+                    <Card variant="outlined">
+                        <CardActionArea>
+                            <CardMedia
+                            className={classes.media}
+                            image={baseUrl + item.image}
+                            title={item.name}
+                            />
+                            <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                {item.name}
+                            </Typography>
+                            {item.designation ? 
+                                (<Typography gutterBottom variant="h6" component="h6">
+                                    {item.designation}
+                                </Typography>
+                                ) 
+                                : null }
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                {item.description}
+                            </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </Grow>
             </Grid>
         );
     }
