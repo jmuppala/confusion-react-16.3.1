@@ -17,6 +17,7 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+import Loading from './LoadingComponent';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,24 +38,37 @@ const useStyles = makeStyles((theme) => ({
 
 function LeaderList({ leaders }) {
 
-    return (
-        <List>
-            { leaders.map((leader, index) => (
-                <React.Fragment key={index}>
-                    <ListItem alignItems="flex-start">
-                        <ListItemAvatar>
-                            <Avatar alt={leader.name} src={leader.image} />
-                        </ListItemAvatar>
-                        <ListItemText
-                        primary={leader.name}
-                        secondary={leader.description}
-                        />
-                    </ListItem>
-                    {(index < leaders.length - 1) ? <Divider /> : null }
-                </React.Fragment>
-            ))}
-        </List>
-    );
+    if (leaders.isLoading)
+        return (<Loading message={'Loading Leaders'} />);
+    else if (leaders.errMess !== null) {
+        return(
+            <Typography variant="body1" align='left' component="p">
+                {leaders.errMess}
+            </Typography>
+        );
+    }
+    else if (leaders.items.length > 0) {
+        return (
+            <List>
+                { leaders.items.map((leader, index) => (
+                    <React.Fragment key={index}>
+                        <ListItem alignItems="flex-start">
+                            <ListItemAvatar>
+                                <Avatar alt={leader.name} src={leader.image} />
+                            </ListItemAvatar>
+                            <ListItemText
+                            primary={leader.name}
+                            secondary={leader.description}
+                            />
+                        </ListItem>
+                        {(index < leaders.items.length - 1) ? <Divider /> : null }
+                    </React.Fragment>
+                ))}
+            </List>
+        );
+    }
+    else
+        return (<Loading message={'Loading Leaders'} />);
 }
 
 export default function About({ leaders }) {

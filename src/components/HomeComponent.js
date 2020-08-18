@@ -6,6 +6,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import Loading from './LoadingComponent';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -21,49 +22,72 @@ const useStyles = makeStyles((theme) => ({
     title: {
       margin: theme.spacing(4, 0, 2),
     }
-}));
+  }));
 
-function RenderCard ({ items, classes }) {
+  function RenderCard ({ items, classes }) {
 
-    let item = items.filter((item) => item.featured)[0];
-
-    return(
-        <Grid item xs={12} md={4}>
-            <Card variant="outlined">
-            <CardActionArea>
-                <CardMedia
-                className={classes.media}
-                image={item.image}
-                title={item.name}
-                />
-                <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                    {item.name}
-                </Typography>
-                {item.designation ? 
-                    (<Typography gutterBottom variant="h6" component="h6">
-                        {item.designation}
+    if (items.isLoading) {
+        return(
+            <Grid item xs={12} md={4}>
+                <Loading message={'Loading'} />
+            </Grid>
+        );
+    }
+    else if (items.errMess !== null) {
+        return(
+          <Grid item xs={12} md={4}>
+            <Typography variant="body1" align='left' component="p">
+                {items.errMess}
+            </Typography>
+          </Grid>
+        );
+    }
+    else if (items.items.length > 0) {
+        let item = items.items.filter((item) => item.featured)[0];
+        return(
+            <Grid item xs={12} md={4}>
+                <Card variant="outlined">
+                <CardActionArea>
+                    <CardMedia
+                    className={classes.media}
+                    image={item.image}
+                    title={item.name}
+                    />
+                    <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2">
+                        {item.name}
                     </Typography>
-                    ) 
-                    : null }
-                <Typography variant="body2" color="textSecondary" component="p">
-                    {item.description}
-                </Typography>
-                </CardContent>
-            </CardActionArea>
-            </Card>
-        </Grid>
-    );
+                    {item.designation ? 
+                        (<Typography gutterBottom variant="h6" component="h6">
+                            {item.designation}
+                        </Typography>
+                        ) 
+                        : null }
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        {item.description}
+                    </Typography>
+                    </CardContent>
+                </CardActionArea>
+                </Card>
+            </Grid>
+        );
+    }
+    else
+        return(
+            <Grid item xs={12} md={4}>
+                <Loading message={'Loading'} />
+            </Grid>
+        );
 }
 
-export default function Home({ dishes, promotions, leaders }) {
+export default function Home({ dishes, promotions, leaders}) {
     const classes = useStyles();
 
     return(
-        <div className={classes.root}>
+        <Grid container spacing={2}>
             <RenderCard items={dishes} classes={classes} />
             <RenderCard items={promotions} classes={classes} />
             <RenderCard items={leaders} classes={classes} />
-        </div>
+        </Grid>
     );
 }

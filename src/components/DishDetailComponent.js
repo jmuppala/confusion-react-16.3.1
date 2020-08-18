@@ -26,6 +26,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Loading from './LoadingComponent';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -179,12 +180,32 @@ function CommentForm({ dishId, addComment, classes }) {
 }
 
 export default function DishDetail ({ dishes, comments, addComment }) {
-    const classes = useStyles();
+  const classes = useStyles();
+  const { dishId } = useParams();
 
-    const { dishId } = useParams();
-    let dish = dishes.filter((dish) => dish.id === parseInt(dishId,10))[0];
-    let commentList = comments.filter((comment) => comment.dishId === parseInt(dishId,10));
-
+  if (dishes.isLoading)
+    return(
+      <Grid container spacing={2} className={classes.root}>
+        <Grid item xs={12}>
+          <Loading message={'Loading Dishes'} />
+        </Grid>
+      </Grid>
+    );
+  else if (dishes.errMess !== null) {
+    return(
+      <Grid container spacing={2} className={classes.root}>
+        <Grid item xs={12}>
+          <Typography variant="body1" align='left' component="p">
+              {dishes.errMess}
+          </Typography>
+        </Grid>
+      </Grid>
+    );
+  }
+  else if (dishes.items.length > 0) {
+    let dish = dishes.items.filter((dish) => dish.id === parseInt(dishId,10))[0];
+    let commentList = comments.items.filter((comment) => comment.dishId === parseInt(dishId,10));
+    
     return(
         <Grid container spacing={2} className={classes.root}>
             <Grid item xs={12}>
@@ -195,16 +216,25 @@ export default function DishDetail ({ dishes, comments, addComment }) {
                     <Link color="inherit" component={RouterLink} to="/menu">
                     Menu
                     </Link>
-                    <Typography color="textPrimary">{dish.name}</Typography>
+                    <Typography color="textPrimary">{dish?.name}</Typography>
                 </Breadcrumbs>
             </Grid>
             <Grid item xs={12}>
                 <Typography variant="h4" align='left' component="h4">
-                {dish.name}
+                {dish?.name}
                 </Typography>
             </Grid>
             <DishCard dish={dish} classes={classes} />
             <DishComments dishId={dish.id} comments={commentList} addComment={addComment} classes={classes} />
         </Grid>
+    );
+  }
+  else
+    return(
+      <Grid container spacing={2} className={classes.root}>
+        <Grid item xs={12}>
+          <Loading message={'Loading Dishes'} />
+        </Grid>
+      </Grid>
     );
 }
