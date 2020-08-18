@@ -1,5 +1,5 @@
 import * as ActionTypes from './ActionTypes';
-import { useReducer } from 'react';
+import { useReducer, useEffect, useRef } from 'react';
 import { DISHES } from '../shared/dishes';
 import { COMMENTS } from '../shared/comments';
 import { PROMOTIONS } from '../shared/promotions';
@@ -17,11 +17,31 @@ function reducer (state, action) {
 function useConfusion(initialState) {
 
     const [state,dispatch] = useReducer(reducer, initialState);
+    const actionRef = useRef();
+    const oldStateRef = useRef();
 
-    const add = (item) => dispatch({
+    const myDispatch = (action) => {
+        actionRef.current = action;
+        oldStateRef.current = state;
+        dispatch(action);
+    };
+
+    const add = (item) => myDispatch({
         type: ActionTypes.ADD,
         payload: item
     });
+  
+    useEffect(() => {
+        const action = actionRef.current;
+    
+        if (action) {
+          console.group('action: ', action.type);
+          console.log('Prev State:', oldStateRef.current);
+          console.log('Action:', action);
+          console.log('Next State:', state);
+          console.groupEnd();
+        }
+    }, [state]);
 
     return [state, add];
 }
