@@ -18,6 +18,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Loading from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,7 +55,7 @@ function LeaderList({ leaders }) {
                     <React.Fragment key={index}>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar>
-                                <Avatar alt={leader.name} src={leader.image} />
+                                <Avatar alt={leader.name} src={baseUrl + leader.image} />
                             </ListItemAvatar>
                             <ListItemText
                             primary={leader.name}

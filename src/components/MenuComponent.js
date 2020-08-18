@@ -11,6 +11,7 @@ import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Loading from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,7 +51,7 @@ function MenuItems({ dishes, classes }) {
       <GridList cellHeight={240} cols={3} className={classes.gridList}>
         { dishes.items.map((dish) => (
           <GridListTile key={dish.id}>
-            <img src={dish.image} alt={dish.name} />
+            <img src={baseUrl + dish.image} alt={dish.name} />
             <RouterLink to={`/menu/${dish.id}`}>
               <GridListTileBar
               title={dish.name}

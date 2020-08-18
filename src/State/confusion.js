@@ -1,9 +1,7 @@
 import * as ActionTypes from './ActionTypes';
 import { useReducer, useEffect, useRef } from 'react';
-import { DISHES } from '../shared/dishes';
-import { COMMENTS } from '../shared/comments';
-import { PROMOTIONS } from '../shared/promotions';
-import { LEADERS } from '../shared/leaders';
+import { baseUrl } from '../shared/baseUrl';
+import fetch from 'cross-fetch';
 
 function reducer (state, action) {
     switch(action.type) {
@@ -80,28 +78,15 @@ function useThunk(itemType) {
 
     const [state, loading, failed, set, add] = useConfusion(itemType);
 
+    const url = baseUrl + itemType;
+
     const fetchData = () => {
 
         loading();
 
-        setTimeout(() => {
-            switch (itemType) {
-                case 'dishes':
-                    set(DISHES);
-                    break;
-                case 'comments':
-                    set(COMMENTS);
-                    break;
-                case 'promotions':
-                    set(PROMOTIONS);
-                    break;
-                case 'leaders':
-                    set(LEADERS);
-                    break;
-                default:
-                    break;
-            }
-        }, 2000);
+        fetch(url)
+        .then(response => response.json())
+        .then(items => set(items));
         
     }
 
@@ -109,7 +94,7 @@ function useThunk(itemType) {
         fetchData();
     },[])
 
-    return [state, fetch, add];
+    return [state, add];
 }
 
 export const useDishes = () => useThunk('dishes');

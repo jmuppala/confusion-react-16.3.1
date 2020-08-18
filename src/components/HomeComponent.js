@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Loading from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
                 <CardActionArea>
                     <CardMedia
                     className={classes.media}
-                    image={item.image}
+                    image={baseUrl + item.image}
                     title={item.name}
                     />
                     <CardContent>

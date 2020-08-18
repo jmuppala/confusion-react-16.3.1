@@ -27,6 +27,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Loading from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,7 +53,7 @@ function DishCard ({ dish, classes }) {
             <CardActionArea>
                 <CardMedia
                 className={classes.media}
-                image={dish.image}
+                image={baseUrl + dish.image}
                 title={dish.name}
                 />
                 <CardContent>
