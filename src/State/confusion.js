@@ -85,8 +85,21 @@ function useThunk(itemType) {
         loading();
 
         fetch(url)
+        .then(response => {
+            if (response.ok) {
+                return response;
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText + ' ' + response.url);
+                throw error;
+            }
+        },
+        error => {
+            throw error;
+        })
         .then(response => response.json())
-        .then(items => set(items));
+        .then(items => set(items))
+        .catch(error => failed(error.message));
         
     }
 
