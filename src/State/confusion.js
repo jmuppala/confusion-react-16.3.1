@@ -126,11 +126,40 @@ function useThunk(itemType) {
             alert('Your comment could not be posted\nError: '+ error.message); })
     }
 
+    const postFeedback = (feedback) => {
+    
+        fetch(baseUrl + 'feedback', {
+            method: 'POST',
+            body: JSON.stringify(feedback),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (response.ok) {
+                return response;
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText + ' ' + response.url);
+                error.response = response;
+                throw error;
+            }
+        },
+        error => {
+            throw error;
+        })
+        .then(response => response.json())
+        .then(response =>{ console.log('Feedback', response); alert('Thank you for your feedback!\n'+JSON.stringify(response)); })
+        .catch(error => { console.log('Your feedback could not be posted\nError: ', error.message);
+            alert('Your feedback could not be posted\nError: '+ error.message); })
+    }
+
     useEffect(() => {
         fetchData();
     },[])
 
-    return [state, addItem];
+    return [state, addItem, postFeedback];
 }
 
 export const useDishes = () => useThunk('dishes');

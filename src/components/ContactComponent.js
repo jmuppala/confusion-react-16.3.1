@@ -60,7 +60,7 @@ export default function Contact(props) {
         event.preventDefault();
 
         console.log('Form Value is: ', JSON.stringify(formState));
-        alert('Form Value is: ' + JSON.stringify(formState));
+        props.postFeedback(formState);
         setFormState({
             firstname: '',
             lastname: '',

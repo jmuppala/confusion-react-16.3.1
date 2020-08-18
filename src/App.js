@@ -16,10 +16,10 @@ import './App.css';
 function App() {
 
   const [dishes] = useDishes();
-  const [comments, addComment] = useComments();
+  const [comments, addComment, postFeedback] = useComments();
   const [promotions] = usePromotions();
   const [leaders] = useLeaders();
-  
+
   let location = useLocation();
 
   return (
@@ -43,7 +43,7 @@ function App() {
                 <DishDetail dishes={dishes} comments={comments} addComment={addComment} />
               </Route>
               <Route exact path='/contactus'>
-                <Contact />
+                <Contact postFeedback={postFeedback} />
               </Route>
               <Redirect to='/home' />
             </Switch>

@@ -19,6 +19,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Loading from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import Slide from '@material-ui/core/Slide';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,22 +51,24 @@ function LeaderList({ leaders }) {
     }
     else if (leaders.items.length > 0) {
         return (
-            <List>
-                { leaders.items.map((leader, index) => (
-                    <React.Fragment key={index}>
-                        <ListItem alignItems="flex-start">
-                            <ListItemAvatar>
-                                <Avatar alt={leader.name} src={baseUrl + leader.image} />
-                            </ListItemAvatar>
-                            <ListItemText
-                            primary={leader.name}
-                            secondary={leader.description}
-                            />
-                        </ListItem>
-                        {(index < leaders.items.length - 1) ? <Divider /> : null }
-                    </React.Fragment>
-                ))}
-            </List>
+            <Slide direction="left" in={true} mountOnEnter unmountOnExit timeout={1000}>
+                <List>
+                    { leaders.items.map((leader, index) => (
+                        <React.Fragment key={index}>
+                            <ListItem alignItems="flex-start">
+                                <ListItemAvatar>
+                                    <Avatar alt={leader.name} src={baseUrl + leader.image} />
+                                </ListItemAvatar>
+                                <ListItemText
+                                primary={leader.name}
+                                secondary={leader.description}
+                                />
+                            </ListItem>
+                            {(index < leaders.items.length - 1) ? <Divider /> : null }
+                        </React.Fragment>
+                    ))}
+                </List>
+            </Slide>
         );
     }
     else
