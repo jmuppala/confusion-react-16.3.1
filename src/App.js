@@ -8,8 +8,10 @@ import Contact from './components/ContactComponent';
 import Footer from './components/FooterComponent';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
 import { useDishes, useComments, usePromotions, useLeaders } from './State/confusion';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import './App.css';
 
 function App() {
 
@@ -17,30 +19,36 @@ function App() {
   const [comments, addComment] = useComments();
   const [promotions] = usePromotions();
   const [leaders] = useLeaders();
+  
+  let location = useLocation();
 
   return (
     <>
       <CssBaseline />
       <NavBar />
       <Container fixed>
-        <Switch>
-          <Route exact path='/home'>
-            <Home dishes={dishes} promotions={promotions} leaders={leaders} />
-          </Route>
-          <Route exact path='/aboutus'>
-            <About leaders={leaders} />
-          </Route>
-          <Route exact path='/menu'>
-            <MenuList dishes={dishes} />
-          </Route>
-          <Route path='/menu/:dishId'>
-            <DishDetail dishes={dishes} comments={comments} addComment={addComment} />
-          </Route>
-          <Route exact path='/contactus'>
-            <Contact />
-          </Route>
-          <Redirect to='/home' />
-        </Switch>
+        <TransitionGroup>
+          <CSSTransition key={location.key} classNames="page" timeout={300}>
+            <Switch>
+              <Route exact path='/home'>
+                <Home dishes={dishes} promotions={promotions} leaders={leaders} />
+              </Route>
+              <Route exact path='/aboutus'>
+                <About leaders={leaders} />
+              </Route>
+              <Route exact path='/menu'>
+                <MenuList dishes={dishes} />
+              </Route>
+              <Route path='/menu/:dishId'>
+                <DishDetail dishes={dishes} comments={comments} addComment={addComment} />
+              </Route>
+              <Route exact path='/contactus'>
+                <Contact />
+              </Route>
+              <Redirect to='/home' />
+            </Switch>
+          </CSSTransition>
+        </TransitionGroup>
       </Container>
       <Footer />
     </>
