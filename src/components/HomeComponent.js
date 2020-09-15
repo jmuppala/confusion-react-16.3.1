@@ -6,6 +6,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import { useFeaturedDish, useFeaturedPromotion, useFeaturedLeader } from '../State/confusion'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,9 +24,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function RenderCard ({ items, classes }) {
-
-    let item = items.filter((item) => item.featured)[0];
+function RenderCard ({ item, classes }) {
 
     return(
         <Grid item xs={12} md={4}>
@@ -59,11 +58,15 @@ function RenderCard ({ items, classes }) {
 export default function Home({ dishes, promotions, leaders }) {
     const classes = useStyles();
 
+    const dish = useFeaturedDish();
+    const promotion = useFeaturedPromotion();
+    const leader = useFeaturedLeader();
+
     return(
         <div className={classes.root}>
-            <RenderCard items={dishes} classes={classes} />
-            <RenderCard items={promotions} classes={classes} />
-            <RenderCard items={leaders} classes={classes} />
+            <RenderCard item={dish} classes={classes} />
+            <RenderCard item={promotion} classes={classes} />
+            <RenderCard item={leader} classes={classes} />
         </div>
     );
 }

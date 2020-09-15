@@ -9,17 +9,8 @@ import Footer from './components/FooterComponent';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { useDishes } from './State/confusion';
-import { useComments } from './State/confusion';
-import { usePromotions } from './State/confusion';
-import { useLeaders } from './State/confusion';
 
 function App() {
-
-  const dishes = useDishes();
-  const comments = useComments();
-  const promotions = usePromotions();
-  const leaders = useLeaders();
 
   return (
     <>
@@ -28,16 +19,16 @@ function App() {
       <Container fixed>
         <Switch>
           <Route exact path='/home'>
-            <Home dishes={dishes} promotions={promotions} leaders={leaders} />
+            <Home />
           </Route>
           <Route exact path='/aboutus'>
-            <About leaders={leaders} />
+            <About />
           </Route>
           <Route exact path='/menu'>
-            <MenuList dishes={dishes} />
+            <MenuList />
           </Route>
           <Route path='/menu/:dishId'>
-            <DishDetail dishes={dishes} comments={comments} />
+            <DishDetail />
           </Route>
           <Route exact path='/contactus'>
             <Contact />

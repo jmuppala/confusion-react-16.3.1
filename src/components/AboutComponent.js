@@ -17,6 +17,7 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+import { useLeaders } from '../State/confusion';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -57,8 +58,9 @@ function LeaderList({ leaders }) {
     );
 }
 
-export default function About({ leaders }) {
+export default function About() {
   const classes = useStyles();
+  const leaders = useLeaders();
 
     return(
         <div className={classes.root}>

@@ -1,38 +1,60 @@
-import { atom, useRecoilValue } from 'recoil';
+import { atom, selector, useRecoilValue } from 'recoil';
 import { DISHES } from '../shared/dishes';
 import { COMMENTS } from '../shared/comments';
 import { PROMOTIONS } from '../shared/promotions';
 import { LEADERS } from '../shared/leaders';
 
-const State = [];
-
-State['dishes'] = atom({
+const dishesState = atom({
     key: 'dishesState', // unique ID (with respect to other atoms/selectors)
     default: DISHES // default value (aka initial value)
 });
 
-State['comments'] = atom({
+const commentsState = atom({
     key: 'commentsState', // unique ID (with respect to other atoms/selectors)
     default: COMMENTS // default value (aka initial value)
 });
 
-State['promotions'] = atom({
+const promotionsState = atom({
     key: 'promotionsState', // unique ID (with respect to other atoms/selectors)
     default: PROMOTIONS // default value (aka initial value)
 });
 
-State['leaders'] = atom({
+const leadersState = atom({
     key: 'leaderState', // unique ID (with respect to other atoms/selectors)
     default: LEADERS // default value (aka initial value)
 });
 
-function useConfusion(itemType) {
-    const itemState = useRecoilValue(State[itemType]);
+const featuredDishState = selector({
+    key: 'featuredDishState',
+    get: ({get}) => {
+      const dishes = get(dishesState);
 
-    return itemState;
-}
+      return dishes.filter((dish) => dish.featured)[0];
+    }
+});
 
-export const useDishes = () => useConfusion('dishes');
-export const useComments = () => useConfusion('comments');
-export const usePromotions = () => useConfusion('promotions');
-export const useLeaders = () => useConfusion('leaders');
+const featuredPromotionState = selector({
+    key: 'featuredPromotionState',
+    get: ({get}) => {
+      const promotions = get(promotionsState);
+
+      return promotions.filter((promotion) => promotion.featured)[0];
+    }
+});
+
+const featuredLeaderState = selector({
+    key: 'featuredLeaderState',
+    get: ({get}) => {
+      const leaders = get(leadersState);
+
+      return leaders.filter((leader) => leader.featured)[0];
+    }
+});
+
+export const useDishes = () => useRecoilValue(dishesState);
+export const useComments = () => useRecoilValue(commentsState);
+export const usePromotions = () => useRecoilValue(promotionsState);
+export const useLeaders = () => useRecoilValue(leadersState);
+export const useFeaturedDish = () => useRecoilValue(featuredDishState);
+export const useFeaturedPromotion = () => useRecoilValue(featuredPromotionState);
+export const useFeaturedLeader = () => useRecoilValue(featuredLeaderState);

@@ -10,6 +10,7 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import { useDishes } from '../State/confusion';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,8 +29,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function MenuList({ dishes }) {
+export default function MenuList() {
   const classes = useStyles();
+  const dishes = useDishes();
 
   return (
     <div className={classes.root}>

@@ -26,6 +26,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import { useDishes, useComments} from '../State/confusion';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -177,12 +178,12 @@ function CommentForm({ classes }) {
     );
 }
 
-export default function DishDetail ({ dishes, comments }) {
+export default function DishDetail () {
     const classes = useStyles();
 
     const { dishId } = useParams();
-    let dish = dishes.filter((dish) => dish.id === parseInt(dishId,10))[0];
-    let commentList = comments.filter((comment) => comment.dishId === parseInt(dishId,10));
+    let dish = useDishes().filter((dish) => dish.id === parseInt(dishId,10))[0];
+    let commentList = useComments().filter((comment) => comment.dishId === parseInt(dishId,10));
 
     return(
         <Grid container spacing={2} className={classes.root}>
