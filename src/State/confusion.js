@@ -1,4 +1,4 @@
-import { atom, selector, useRecoilValue } from 'recoil';
+import { atom, selector, useRecoilValue, useSetRecoilState } from 'recoil';
 import { DISHES } from '../shared/dishes';
 import { COMMENTS } from '../shared/comments';
 import { PROMOTIONS } from '../shared/promotions';
@@ -58,3 +58,12 @@ export const useLeaders = () => useRecoilValue(leadersState);
 export const useFeaturedDish = () => useRecoilValue(featuredDishState);
 export const useFeaturedPromotion = () => useRecoilValue(featuredPromotionState);
 export const useFeaturedLeader = () => useRecoilValue(featuredLeaderState);
+export function useAddComment() {
+    const setComments = useSetRecoilState(commentsState);
+
+    const add = (comment) => {
+        setComments((oldcomments) => [ ...oldcomments, {...comment, id: oldcomments.length}]);
+    }
+
+    return add;
+}

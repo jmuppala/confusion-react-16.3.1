@@ -26,7 +26,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { useDishes, useComments} from '../State/confusion';
+import { useDishes, useComments, useAddComment } from '../State/confusion';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -69,7 +69,7 @@ function DishCard ({ dish, classes }) {
     );
 }
 
-function DishComments({ comments, classes }) {
+function DishComments({ dishId, comments, classes }) {
     return(
         <Grid item xs={12} md={6}>
             <Typography variant="h6" className={classes.title}>
@@ -85,18 +85,21 @@ function DishComments({ comments, classes }) {
                 </ListItem>                  
               ))}
             </List>
-            <CommentForm classes={classes} />
+            <CommentForm dishId={dishId} classes={classes} />
         </Grid>
     );
 }
 
-function CommentForm({ classes }) {
+function CommentForm({ dishId, classes }) {
 
     const { register, handleSubmit, reset, errors, clearErrors, control } = useForm({ mode: 'onChange' });
     const [commentOpen, setCommentOpen] = useState(false);
 
+    const addComment = useAddComment();
+
     const handleCommentSubmit = (data) => {
-      alert(JSON.stringify(data));
+      alert(JSON.stringify({...data, dishId: dishId, date: new Date().toISOString()}));
+      addComment({...data, dishId: dishId, date: new Date().toISOString()});
       reset();
       clearErrors();
       setCommentOpen(false);
@@ -204,7 +207,7 @@ export default function DishDetail () {
                 </Typography>
             </Grid>
             <DishCard dish={dish} classes={classes} />
-            <DishComments comments={commentList} classes={classes} />
+            <DishComments dishId={dish.id} comments={commentList} classes={classes} />
         </Grid>
     );
 }
