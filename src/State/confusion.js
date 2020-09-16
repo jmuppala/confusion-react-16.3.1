@@ -8,44 +8,92 @@ const url = atom({
 const dishesState = selector({
     key: 'dishesState', // unique ID (with respect to other atoms/selectors)
     get:  async ({get}) => {
-        const fetchUrl=get(url)+ 'dishes';
+        try{
+            const fetchUrl=get(url)+ 'dishes';
 
-        const response = await fetch(fetchUrl);
-        const items = await response.json();
-        return (items);
+            const response = await fetch(fetchUrl);
+
+            if (response.ok) {
+                const items = await response.json();
+                return (items);
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText + ' ' + response.url);
+                throw error;
+            }
+        }
+        catch (error) {
+            throw error;
+        }
     }
 });
 
 const commentsState = selector({
     key: 'commentsState', // unique ID (with respect to other atoms/selectors)
     get:  async ({get}) => {
-        const fetchUrl=get(url)+ 'comments';
+        try{
+            const fetchUrl=get(url)+ 'comments';
 
-        const response = await fetch(fetchUrl);
-        const items = await response.json();
-        return (items);
+            const response = await fetch(fetchUrl);
+
+            if (response.ok) {
+                const items = await response.json();
+                return (items);
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText + ' ' + response.url);
+                throw error;
+            }
+        }
+        catch (error) {
+            throw error;
+        }
     }
 });
 
 const promotionsState = selector({
     key: 'promotionsState', // unique ID (with respect to other atoms/selectors)
     get:  async ({get}) => {
-        const fetchUrl=get(url)+ 'promotions';
+        try{
+            const fetchUrl=get(url)+ 'promotions';
 
-        const response = await fetch(fetchUrl);
-        const items = await response.json();
-        return (items);
+            const response = await fetch(fetchUrl);
+
+            if (response.ok) {
+                const items = await response.json();
+                return (items);
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText + ' ' + response.url);
+                throw error;
+            }
+        }
+        catch (error) {
+            throw error;
+        }
     }
 });
 
 const leadersState = selector({
     key: 'leaderState', // unique ID (with respect to other atoms/selectors)
     get:  async ({get}) => {
-        const fetchUrl=get(url)+ 'leaders';
+        try{
+            const fetchUrl=get(url)+ 'leaders';
 
-        const response = await fetch(fetchUrl);
-        const items = await response.json();
-        return (items);
+            const response = await fetch(fetchUrl);
+
+            if (response.ok) {
+                const items = await response.json();
+                return (items);
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText + ' ' + response.url);
+                throw error;
+            }
+        }
+        catch (error) {
+            throw error;
+        }
     }
 });
 

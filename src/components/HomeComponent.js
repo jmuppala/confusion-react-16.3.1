@@ -8,6 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import { useFeaturedDish, useFeaturedPromotion, useFeaturedLeader, useBaseUrl } from '../State/confusion';
 import Loading from './LoadingComponent';
+import { ErrorBoundary } from "react-error-boundary";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -87,15 +88,54 @@ export default function Home() {
 
     return(
         <div className={classes.root}>
-            <Suspense fallback={<Loading message={'Loading Dish'} />}>
-                <RenderFeaturedDish classes={classes} />
-            </Suspense>
-            <Suspense fallback={<Loading message={'Loading Promotion'} />}>
-                <RenderFeaturedPromotion classes={classes} />
-            </Suspense>
-            <Suspense fallback={<Loading message={'Loading Leader'} />}>
-                <RenderFeaturedLeader classes={classes} />
-            </Suspense>
+            <ErrorBoundary
+                fallbackRender={({error, componentStack, resetErrorBoundary}) => (
+                <div role="alert">
+                    <Typography variant="h5" align='left' component="h5">
+                    Error
+                    </Typography>
+                    <Typography variant="body1" align='left' component="p">
+                    {error.message}
+                    </Typography>
+                </div>
+                )}
+            >
+                <Suspense fallback={<Loading message={'Loading Dish'} />}>
+                    <RenderFeaturedDish classes={classes} />
+                </Suspense>
+            </ErrorBoundary>
+            <ErrorBoundary
+                fallbackRender={({error, componentStack, resetErrorBoundary}) => (
+                <div role="alert">
+                    <Typography variant="h5" align='left' component="h5">
+                    Error
+                    </Typography>
+                    <Typography variant="body1" align='left' component="p">
+                    {error.message}
+                    </Typography>
+                </div>
+                )}
+            >
+                <Suspense fallback={<Loading message={'Loading Promotion'} />}>
+                    <RenderFeaturedPromotion classes={classes} />
+                </Suspense>
+            </ErrorBoundary>
+            <ErrorBoundary
+                fallbackRender={({error, componentStack, resetErrorBoundary}) => (
+                <div role="alert">
+                    <Typography variant="h5" align='left' component="h5">
+                    Error
+                    </Typography>
+                    <Typography variant="body1" align='left' component="p">
+                    {error.message}
+                    </Typography>
+                </div>
+                )}
+            >
+                <Suspense fallback={<Loading message={'Loading Leader'} />}>
+                    <RenderFeaturedLeader classes={classes} />
+                </Suspense>
+            </ErrorBoundary>
         </div>
     );
 }

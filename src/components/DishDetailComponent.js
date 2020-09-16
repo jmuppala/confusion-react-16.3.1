@@ -28,6 +28,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { useDishes, useComments, useAddComment, useBaseUrl } from '../State/confusion';
 import Loading from './LoadingComponent';
+import { ErrorBoundary } from "react-error-boundary";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -212,9 +213,22 @@ export default function DishDetail () {
                 </Typography>
             </Grid>
             <DishCard dish={dish} classes={classes} />
-            <Suspense fallback={<Loading message={'Loading Comments'} />}>
-              <DishComments dishId={dishId} classes={classes} />
-            </Suspense>
+            <ErrorBoundary
+                fallbackRender={({error, componentStack, resetErrorBoundary}) => (
+                <div role="alert">
+                    <Typography variant="h5" align='left' component="h5">
+                    Error
+                    </Typography>
+                    <Typography variant="body1" align='left' component="p">
+                    {error.message}
+                    </Typography>
+                </div>
+                )}
+            >
+              <Suspense fallback={<Loading message={'Loading Comments'} />}>
+                <DishComments dishId={dishId} classes={classes} />
+              </Suspense>
+            </ErrorBoundary>
         </Grid>
     );
 }

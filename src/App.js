@@ -10,6 +10,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Loading from './components/LoadingComponent';
+import { ErrorBoundary } from "react-error-boundary";
+import Typography from '@material-ui/core/Typography';
 
 function App() {
 
@@ -18,6 +20,18 @@ function App() {
       <CssBaseline />
       <NavBar />
       <Container fixed>
+      <ErrorBoundary
+        fallbackRender={({error, componentStack, resetErrorBoundary}) => (
+          <div role="alert">
+            <Typography variant="h5" align='left' component="h5">
+              Error
+            </Typography>
+            <Typography variant="body1" align='left' component="p">
+              {error.message}
+            </Typography>
+          </div>
+        )}
+      >
       <Suspense fallback={<Loading message={'Loading'} />}>
         <Switch>
           <Route exact path='/home'>
@@ -37,7 +51,8 @@ function App() {
           </Route>
           <Redirect to='/home' />
         </Switch>
-        </Suspense>
+      </Suspense>
+      </ErrorBoundary>
       </Container>
       <Footer />
     </>

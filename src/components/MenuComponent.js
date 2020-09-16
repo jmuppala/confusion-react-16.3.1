@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { useDishes, useBaseUrl } from '../State/confusion';
 import Loading from './LoadingComponent';
+import { ErrorBoundary } from "react-error-boundary";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,9 +77,22 @@ export default function MenuList() {
                 </Typography>
             </Grid>
         </Grid>
-        <Suspense fallback={<Loading message={'Loading Dishes'} />}>
-          <MenuItems classes={classes} />
-        </Suspense>
+        <ErrorBoundary
+          fallbackRender={({error, componentStack, resetErrorBoundary}) => (
+          <div role="alert">
+              <Typography variant="h5" align='left' component="h5">
+              Error
+              </Typography>
+              <Typography variant="body1" align='left' component="p">
+              {error.message}
+              </Typography>
+          </div>
+          )}
+        >
+          <Suspense fallback={<Loading message={'Loading Dishes'} />}>
+            <MenuItems classes={classes} />
+          </Suspense>
+        </ErrorBoundary>
     </div>
   );
 }
