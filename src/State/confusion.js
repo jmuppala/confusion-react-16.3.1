@@ -1,27 +1,52 @@
 import { atom, selector, useRecoilValue, useSetRecoilState } from 'recoil';
-import { DISHES } from '../shared/dishes';
-import { COMMENTS } from '../shared/comments';
-import { PROMOTIONS } from '../shared/promotions';
-import { LEADERS } from '../shared/leaders';
 
-const dishesState = atom({
+const url = atom({
+    key: 'url',
+    default: 'http://localhost:3001/'
+});
+
+const dishesState = selector({
     key: 'dishesState', // unique ID (with respect to other atoms/selectors)
-    default: DISHES // default value (aka initial value)
+    get:  async ({get}) => {
+        const fetchUrl=get(url)+ 'dishes';
+
+        const response = await fetch(fetchUrl);
+        const items = await response.json();
+        return (items);
+    }
 });
 
-const commentsState = atom({
+const commentsState = selector({
     key: 'commentsState', // unique ID (with respect to other atoms/selectors)
-    default: COMMENTS // default value (aka initial value)
+    get:  async ({get}) => {
+        const fetchUrl=get(url)+ 'comments';
+
+        const response = await fetch(fetchUrl);
+        const items = await response.json();
+        return (items);
+    }
 });
 
-const promotionsState = atom({
+const promotionsState = selector({
     key: 'promotionsState', // unique ID (with respect to other atoms/selectors)
-    default: PROMOTIONS // default value (aka initial value)
+    get:  async ({get}) => {
+        const fetchUrl=get(url)+ 'promotions';
+
+        const response = await fetch(fetchUrl);
+        const items = await response.json();
+        return (items);
+    }
 });
 
-const leadersState = atom({
+const leadersState = selector({
     key: 'leaderState', // unique ID (with respect to other atoms/selectors)
-    default: LEADERS // default value (aka initial value)
+    get:  async ({get}) => {
+        const fetchUrl=get(url)+ 'leaders';
+
+        const response = await fetch(fetchUrl);
+        const items = await response.json();
+        return (items);
+    }
 });
 
 const featuredDishState = selector({
@@ -67,3 +92,4 @@ export function useAddComment() {
 
     return add;
 }
+export const useBaseUrl = () => useRecoilValue(url);

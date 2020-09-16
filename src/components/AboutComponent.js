@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -17,7 +17,8 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import { useLeaders } from '../State/confusion';
+import { useLeaders, useBaseUrl } from '../State/confusion';
+import Loading from './LoadingComponent';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,7 +37,10 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-function LeaderList({ leaders }) {
+function LeaderList() {
+
+    const leaders = useLeaders();
+    const baseUrl = useBaseUrl();
 
     return (
         <List>
@@ -44,7 +48,7 @@ function LeaderList({ leaders }) {
                 <React.Fragment key={index}>
                     <ListItem alignItems="flex-start">
                         <ListItemAvatar>
-                            <Avatar alt={leader.name} src={leader.image} />
+                            <Avatar alt={leader.name} src={baseUrl + leader.image} />
                         </ListItemAvatar>
                         <ListItemText
                         primary={leader.name}
@@ -60,7 +64,6 @@ function LeaderList({ leaders }) {
 
 export default function About() {
   const classes = useStyles();
-  const leaders = useLeaders();
 
     return(
         <div className={classes.root}>
@@ -133,7 +136,9 @@ export default function About() {
                     <Typography variant="h5" align='left' component="h5">
                     Corporate Leadership
                     </Typography>
-                    <LeaderList leaders={leaders} />
+                    <Suspense fallback={<Loading message={'Loading Leaders'} />}>
+                        <LeaderList />
+                    </Suspense>
                 </Grid>
             </Grid>
         </div>

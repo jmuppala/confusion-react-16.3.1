@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -10,7 +10,8 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { useDishes } from '../State/confusion';
+import { useDishes, useBaseUrl } from '../State/confusion';
+import Loading from './LoadingComponent';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,9 +30,34 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+function MenuItems({ classes }) {
+
+  const dishes = useDishes();
+  const baseUrl = useBaseUrl();
+
+  return(
+    <GridList cellHeight={240} cols={3} className={classes.gridList}>
+      { dishes.map((dish) => (
+          <GridListTile key={dish.id}>
+              <img src={baseUrl + dish.image} alt={dish.name} />
+              <RouterLink to={`/menu/${dish.id}`}>
+                  <GridListTileBar
+                  title={dish.name}
+                  actionIcon={
+                      <IconButton aria-label={`info about ${dish.name}`} className={classes.icon}>
+                      <InfoIcon />
+                      </IconButton>
+                  }
+                  />
+              </RouterLink>
+          </GridListTile>
+      ))}
+    </GridList>
+  );
+}
+
 export default function MenuList() {
   const classes = useStyles();
-  const dishes = useDishes();
 
   return (
     <div className={classes.root}>
@@ -50,23 +76,9 @@ export default function MenuList() {
                 </Typography>
             </Grid>
         </Grid>
-        <GridList cellHeight={240} cols={3} className={classes.gridList}>
-            { dishes.map((dish) => (
-                <GridListTile key={dish.id}>
-                    <img src={dish.image} alt={dish.name} />
-                    <RouterLink to={`/menu/${dish.id}`}>
-                        <GridListTileBar
-                        title={dish.name}
-                        actionIcon={
-                            <IconButton aria-label={`info about ${dish.name}`} className={classes.icon}>
-                            <InfoIcon />
-                            </IconButton>
-                        }
-                        />
-                    </RouterLink>
-                </GridListTile>
-            ))}
-        </GridList>
+        <Suspense fallback={<Loading message={'Loading Dishes'} />}>
+          <MenuItems classes={classes} />
+        </Suspense>
     </div>
   );
 }

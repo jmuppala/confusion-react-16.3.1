@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -26,7 +26,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { useDishes, useComments, useAddComment } from '../State/confusion';
+import { useDishes, useComments, useAddComment, useBaseUrl } from '../State/confusion';
+import Loading from './LoadingComponent';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -46,13 +47,15 @@ const useStyles = makeStyles((theme) => ({
 
 function DishCard ({ dish, classes }) {
 
+  const baseUrl = useBaseUrl();
+
     return(
         <Grid item xs={12} md={6}>
             <Card variant="outlined">
             <CardActionArea>
                 <CardMedia
                 className={classes.media}
-                image={dish.image}
+                image={baseUrl + dish.image}
                 title={dish.name}
                 />
                 <CardContent>
@@ -69,7 +72,10 @@ function DishCard ({ dish, classes }) {
     );
 }
 
-function DishComments({ dishId, comments, classes }) {
+function DishComments({ dishId, classes }) {
+
+  const comments = useComments().filter((comment) => comment.dishId === parseInt(dishId,10));
+
     return(
         <Grid item xs={12} md={6}>
             <Typography variant="h6" className={classes.title}>
@@ -186,7 +192,6 @@ export default function DishDetail () {
 
     const { dishId } = useParams();
     let dish = useDishes().filter((dish) => dish.id === parseInt(dishId,10))[0];
-    let commentList = useComments().filter((comment) => comment.dishId === parseInt(dishId,10));
 
     return(
         <Grid container spacing={2} className={classes.root}>
@@ -207,7 +212,9 @@ export default function DishDetail () {
                 </Typography>
             </Grid>
             <DishCard dish={dish} classes={classes} />
-            <DishComments dishId={dish.id} comments={commentList} classes={classes} />
+            <Suspense fallback={<Loading message={'Loading Comments'} />}>
+              <DishComments dishId={dishId} classes={classes} />
+            </Suspense>
         </Grid>
     );
 }

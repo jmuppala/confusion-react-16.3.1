@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -6,7 +6,8 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import { useFeaturedDish, useFeaturedPromotion, useFeaturedLeader } from '../State/confusion'
+import { useFeaturedDish, useFeaturedPromotion, useFeaturedLeader, useBaseUrl } from '../State/confusion';
+import Loading from './LoadingComponent';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,13 +27,15 @@ const useStyles = makeStyles((theme) => ({
 
 function RenderCard ({ item, classes }) {
 
+    const baseUrl = useBaseUrl();
+
     return(
         <Grid item xs={12} md={4}>
             <Card variant="outlined">
             <CardActionArea>
                 <CardMedia
                 className={classes.media}
-                image={item.image}
+                image={baseUrl + item.image}
                 title={item.name}
                 />
                 <CardContent>
@@ -55,18 +58,44 @@ function RenderCard ({ item, classes }) {
     );
 }
 
-export default function Home({ dishes, promotions, leaders }) {
-    const classes = useStyles();
-
+function RenderFeaturedDish({ classes }) {
     const dish = useFeaturedDish();
+
+    return(
+        <RenderCard item={dish} classes={classes} />
+    );
+}
+
+function RenderFeaturedPromotion({ classes }) {
     const promotion = useFeaturedPromotion();
+
+    return(
+        <RenderCard item={promotion} classes={classes} />
+    );
+}
+
+function RenderFeaturedLeader({ classes }) {
     const leader = useFeaturedLeader();
 
     return(
+        <RenderCard item={leader} classes={classes} />
+    );
+}
+
+export default function Home() {
+    const classes = useStyles();
+
+    return(
         <div className={classes.root}>
-            <RenderCard item={dish} classes={classes} />
-            <RenderCard item={promotion} classes={classes} />
-            <RenderCard item={leader} classes={classes} />
+            <Suspense fallback={<Loading message={'Loading Dish'} />}>
+                <RenderFeaturedDish classes={classes} />
+            </Suspense>
+            <Suspense fallback={<Loading message={'Loading Promotion'} />}>
+                <RenderFeaturedPromotion classes={classes} />
+            </Suspense>
+            <Suspense fallback={<Loading message={'Loading Leader'} />}>
+                <RenderFeaturedLeader classes={classes} />
+            </Suspense>
         </div>
     );
 }
