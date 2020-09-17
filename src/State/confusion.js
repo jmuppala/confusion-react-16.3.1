@@ -1,8 +1,13 @@
-import { atom, selector, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, selector, useRecoilValue, useResetRecoilState, DefaultValue } from 'recoil';
 
 const url = atom({
     key: 'url',
     default: 'http://localhost:3001/'
+});
+
+const forceCommentsUpdate = atom({
+    key: 'forceCommentsUpdate',
+    default: 0,
 });
 
 const dishesState = selector({
@@ -31,6 +36,7 @@ const dishesState = selector({
 const commentsState = selector({
     key: 'commentsState', // unique ID (with respect to other atoms/selectors)
     get:  async ({get}) => {
+        get(forceCommentsUpdate);
         try{
             const fetchUrl=get(url)+ 'comments';
 
@@ -48,6 +54,11 @@ const commentsState = selector({
         catch (error) {
             throw error;
         }
+    },
+    set: ({ set }, value) => {
+      if (value instanceof DefaultValue) {
+        set(forceCommentsUpdate, v => v + 1);
+      }
     }
 });
 
@@ -132,10 +143,40 @@ export const useFeaturedDish = () => useRecoilValue(featuredDishState);
 export const useFeaturedPromotion = () => useRecoilValue(featuredPromotionState);
 export const useFeaturedLeader = () => useRecoilValue(featuredLeaderState);
 export function useAddComment() {
-    const setComments = useSetRecoilState(commentsState);
+    const resetComments = useResetRecoilState(commentsState);
+
+    const UrlValue = useRecoilValue(url);
+
+    const fetchUrl = UrlValue + 'comments';
 
     const add = (comment) => {
-        setComments((oldcomments) => [ ...oldcomments, {...comment, id: oldcomments.length}]);
+
+        fetch(fetchUrl, {
+            method: 'POST',
+            body: JSON.stringify(comment),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (response.ok) {
+                return response;
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText + ' ' + response.url);
+                error.response = response;
+                throw error;
+            }
+        },
+        error => {
+            throw error;
+        })
+        .then(response => response.json())
+        .then(response => console.log('Posted: ', response))
+        .then(() => resetComments())
+        .catch(error => { console.log('Post comments ', error.message);
+            alert('Your comment could not be posted\nError: '+ error.message); });
     }
 
     return add;

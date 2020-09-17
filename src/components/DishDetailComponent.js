@@ -105,8 +105,8 @@ function CommentForm({ dishId, classes }) {
     const addComment = useAddComment();
 
     const handleCommentSubmit = (data) => {
-      alert(JSON.stringify({...data, dishId: dishId, date: new Date().toISOString()}));
-      addComment({...data, dishId: dishId, date: new Date().toISOString()});
+      alert(JSON.stringify({...data, dishId: parseInt(dishId,10), date: new Date().toISOString()}));
+      addComment({...data, dishId: parseInt(dishId,10), date: new Date().toISOString()});
       reset();
       clearErrors();
       setCommentOpen(false);
