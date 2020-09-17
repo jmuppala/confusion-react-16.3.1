@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { useFeaturedDish, useFeaturedPromotion, useFeaturedLeader, useBaseUrl } from '../State/confusion';
 import Loading from './LoadingComponent';
 import { ErrorBoundary } from "react-error-boundary";
+import Grow from '@material-ui/core/Grow';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,6 +33,7 @@ function RenderCard ({ item, classes }) {
 
     return(
         <Grid item xs={12} md={4}>
+            <Grow in={true} timeout={5000}>
             <Card variant="outlined">
             <CardActionArea>
                 <CardMedia
@@ -55,6 +57,7 @@ function RenderCard ({ item, classes }) {
                 </CardContent>
             </CardActionArea>
             </Card>
+            </Grow>
         </Grid>
     );
 }

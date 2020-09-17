@@ -29,6 +29,8 @@ import Select from '@material-ui/core/Select';
 import { useDishes, useComments, useAddComment, useBaseUrl } from '../State/confusion';
 import Loading from './LoadingComponent';
 import { ErrorBoundary } from "react-error-boundary";
+import Fade from '@material-ui/core/Fade';
+import Slide from '@material-ui/core/Slide';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,11 +56,13 @@ function DishCard ({ dish, classes }) {
         <Grid item xs={12} md={6}>
             <Card variant="outlined">
             <CardActionArea>
+              <Fade in={true} timeout={5000}>
                 <CardMedia
                 className={classes.media}
                 image={baseUrl + dish.image}
                 title={dish.name}
                 />
+              </Fade>
                 <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
                     {dish.name}
@@ -82,6 +86,7 @@ function DishComments({ dishId, classes }) {
             <Typography variant="h6" className={classes.title}>
                 Comments
             </Typography>
+            <Slide direction="left" in={true} mountOnEnter unmountOnExit timeout={1000}>
             <List>
               {comments.map((comment) => (
                 <ListItem key={comment.id} >
@@ -92,6 +97,7 @@ function DishComments({ dishId, classes }) {
                 </ListItem>                  
               ))}
             </List>
+            </Slide>
             <CommentForm dishId={dishId} classes={classes} />
         </Grid>
     );
