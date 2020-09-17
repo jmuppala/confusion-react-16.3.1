@@ -8,13 +8,17 @@ import Contact from './components/ContactComponent';
 import Footer from './components/FooterComponent';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
 import Loading from './components/LoadingComponent';
 import { ErrorBoundary } from "react-error-boundary";
 import Typography from '@material-ui/core/Typography';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import './App.css';
 
 function App() {
 
+  let location = useLocation();
+  
   return (
     <>
       <CssBaseline />
@@ -33,6 +37,8 @@ function App() {
         )}
       >
       <Suspense fallback={<Loading message={'Loading'} />}>
+        <TransitionGroup>
+        <CSSTransition key={location.key} classNames="page" timeout={300}>
         <Switch>
           <Route exact path='/home'>
             <Home />
@@ -51,6 +57,8 @@ function App() {
           </Route>
           <Redirect to='/home' />
         </Switch>
+        </CSSTransition>
+        </TransitionGroup>
       </Suspense>
       </ErrorBoundary>
       </Container>
