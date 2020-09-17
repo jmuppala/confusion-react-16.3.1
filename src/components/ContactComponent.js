@@ -19,6 +19,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import { usePostFeedback } from '../State/confusion';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -38,6 +39,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Contact(props) {
     const classes = useStyles();
+
+    const postFeedback = usePostFeedback();
 
     const [formState, setFormState] = useState({
         firstname: '',
@@ -59,8 +62,8 @@ export default function Contact(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        console.log('Form Value is: ', JSON.stringify(formState));
         alert('Form Value is: ' + JSON.stringify(formState));
+        postFeedback(formState);
         setFormState({
             firstname: '',
             lastname: '',
@@ -84,13 +87,10 @@ export default function Contact(props) {
         const name = target.name;
 
         validate(name, value);
-        console.log('errors: ', JSON.stringify(errors));
         setFormState({ ...formState, [name]: value });
     };
 
     function validate (name, value) {
-
-        // console.log('validate: ', name, value);
 
         switch (name) {
             case 'firstname':

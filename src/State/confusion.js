@@ -182,3 +182,42 @@ export function useAddComment() {
     return add;
 }
 export const useBaseUrl = () => useRecoilValue(url);
+
+export function usePostFeedback() {
+
+    const UrlValue = useRecoilValue(url);
+
+    const fetchUrl = UrlValue + 'feedback';
+
+    const postFeedback = (feedback) => {
+        
+        fetch(fetchUrl, {
+            method: 'POST',
+            body: JSON.stringify(feedback),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (response.ok) {
+                return response;
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText + ' ' + response.url);
+                error.response = response;
+                throw error;
+            }
+        },
+        error => {
+            throw error;
+        })
+        .then(response => response.json())
+        .then(response =>{ console.log('Feedback', response); alert('Thank you for your feedback!\n'+JSON.stringify(response)); })
+        .catch(error => { console.log('Your feedback could not be posted\nError: ', error.message);
+            alert('Your feedback could not be posted\nError: '+ error.message); })
+    }
+
+    return postFeedback;
+
+}

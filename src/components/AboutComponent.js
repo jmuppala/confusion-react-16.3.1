@@ -20,6 +20,7 @@ import TableRow from '@material-ui/core/TableRow';
 import { useLeaders, useBaseUrl } from '../State/confusion';
 import Loading from './LoadingComponent';
 import { ErrorBoundary } from "react-error-boundary";
+import Slide from '@material-ui/core/Slide';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -44,6 +45,7 @@ function LeaderList() {
     const baseUrl = useBaseUrl();
 
     return (
+        <Slide direction="left" in={true} mountOnEnter unmountOnExit timeout={1000}>
         <List>
             { leaders.map((leader, index) => (
                 <React.Fragment key={index}>
@@ -60,6 +62,7 @@ function LeaderList() {
                 </React.Fragment>
             ))}
         </List>
+        </Slide>
     );
 }
 
